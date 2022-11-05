@@ -83,6 +83,10 @@ int main(int argc, char **argv) {
 
 		while (fscanf(fp == NULL ? stdin : fp, "%c", &ch) != EOF) {
 			line_char_counter++;
+			if (sflag && ch == '\n' && line_char_counter == 1 && empty_line >= 1) {
+				line_char_counter = 0;
+				continue;
+			}
 			if (bflag) {
 				if (line_char_counter == 1 && ch !='\n') {
 					printf("%6d\t", lineNumber);
@@ -118,7 +122,7 @@ int main(int argc, char **argv) {
 								else
 									printf("^?");
 							} else {
-							printf("^%c",ch - 128 + 64);
+								printf("^%c",ch - 128 + 64);
 							}
 						}
 					} else if (ch == '\t'){
