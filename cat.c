@@ -67,27 +67,28 @@ int main(int argc, char **argv) {
 		int lineNumber = 1;
 		char ch;
 		int line_char_counter = 0;
+		int empty_line = 0;
 
 		while (fscanf(fp == NULL ? stdin : fp, "%c", &ch) != EOF) {
 			line_char_counter++;
 			if (bflag) {
 				if (line_char_counter == 1 && ch !='\n') {
-					printf("%6d", lineNumber);
-				}
-				if (line_char_counter != 1 && ch == '\n') {
-					lineNumber++;
-					line_char_counter = 0;
-				} else if (line_char_counter == 1 && ch == '\n') {
-					line_char_counter = 0;
+					printf("%6d\t", lineNumber);
 				}
 			} else if (nflag) {
 				if (line_char_counter == 1) {
-					printf("%6d", lineNumber);
+					printf("%6d\t", lineNumber);
 				}
-				if (ch == '\n') {
-					lineNumber++;
-					line_char_counter = 0;
+				
+			}
+			if (ch == '\n') {
+				if (line_char_counter == 1) {
+					empty_line++;
+				} else {
+					empty_line = 0;
 				}
+				lineNumber++;
+				line_char_counter = 0;
 			}
 			if (vflag) {
 					if (ch >= 32) {
@@ -113,15 +114,29 @@ int main(int argc, char **argv) {
 							printf("^I");
 					} 
 					else if (ch == '\n') {
-						if (eflag) {
-							printf("$");
-						}
-						printf("\n");
+						if (sflag) {
+							if (empty_line <=1) {
+								if (eflag)
+									printf("$");
+								printf("\n");
+							}
+						} else {
+							if (eflag)
+								printf("$");
+							printf("\n");
+						}						
 					} else {
 						printf("^%c",ch + 64);
                 }
 			} else if (tflag && ch =='\t') {
 				printf("^I");
+			} else if (sflag && ch == '\n') {
+				if (empty_line <= 1) {
+					if (eflag) {
+						printf("$");
+					}
+					printf("\n");
+				}
 			} else if (eflag && ch == '\n') {
 				printf("$\n");
 			} else {
