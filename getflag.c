@@ -1,10 +1,14 @@
 #include <stdio.h>
+#include <string.h>
 
-int main (int argc, char** argv) {
+int getflag (int argc, char** argv, char* flags) {
 	if (argc > 1) {
 		for (int i = 0; i < argc; ++i) {
 			if (argv[i][0] == '-') {
-				printf("%s", argv[i]);
+				int length = strlen(argv[i]);
+				for (int i = 1; i < length; ++i) {
+					
+				}
 			}
 		}
 	}
