@@ -2,13 +2,25 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <getopt.h>
 
 int main(int argc, char **argv) {
 
 	int bflag = 0, eflag = 0, nflag = 0, sflag = 0, tflag = 0, vflag = 0;
 	int opt;
 
-	while ((opt = getopt(argc, argv, "AbeEnstTuv?")) != -1) {
+	static struct option const long_options[] = {
+		{"number-nonblank", no_argument, NULL, 'b'},
+    	{"number", no_argument, NULL, 'n'},
+    	{"squeeze-blank", no_argument, NULL, 's'},
+    	{"show-nonprinting", no_argument, NULL, 'v'},
+    	{"show-ends", no_argument, NULL, 'E'},
+    	{"show-tabs", no_argument, NULL, 'T'},
+    	{"show-all", no_argument, NULL, 'A'},
+    	{NULL, 0, NULL, 0}
+	};
+
+	while ((opt = getopt_long(argc, argv, "AbeEnstTuv?", long_options, NULL)) != -1) {
 		switch (opt) {
 			case 'A':
 				vflag = 1;
@@ -78,16 +90,18 @@ int main(int argc, char **argv) {
 			} else if (nflag) {
 				if (line_char_counter == 1) {
 					printf("%6d\t", lineNumber);
-				}
-				
+				}				
 			}
 			if (ch == '\n') {
 				if (line_char_counter == 1) {
 					empty_line++;
+					if (!bflag) {
+						lineNumber++;
+					}
 				} else {
+					lineNumber++;
 					empty_line = 0;
-				}
-				lineNumber++;
+				}			
 				line_char_counter = 0;
 			}
 			if (vflag) {
